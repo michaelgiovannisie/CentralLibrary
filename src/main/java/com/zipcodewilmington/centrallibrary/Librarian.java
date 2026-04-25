@@ -14,6 +14,14 @@ public class Librarian extends Person {
         setSalary(salary);
     }
 
+    @Override
+    public String toString() {
+    return "Name: " + getName() + " | Age: " + getAge() + 
+    " | Email: " + getEmail() + " | Phone Number: " + getPhoneNumber() + 
+    " | Employee ID: " + employeeId + " | Department: " + department + 
+    " | Salary: $" + salary;
+    }
+
     public String getEmployeeId() {
         return employeeId;
     }

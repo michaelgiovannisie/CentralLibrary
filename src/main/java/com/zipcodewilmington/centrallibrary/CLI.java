@@ -148,7 +148,9 @@ public class CLI{
                     System.out.println("3. View All DVDs");
                     System.out.println("4. View All Music"); 
                     System.out.println("5. View All Periodicals");
-                    System.out.println("6. Back");
+                    System.out.println("6. View All Members"); 
+                    System.out.println("7. View All Librarians"); 
+                    System.out.println("8. Back");
                     System.out.println("Please enter your choice: ");
                     int option2;
                     if(scanner.hasNextInt()) {
@@ -221,6 +223,26 @@ public class CLI{
                             }
                             break;
                         case 6:
+                            System.out.println("\nALL LIBRARY MEMBERS: ");
+                            if (library.getMembers().isEmpty()) {
+                                System.out.println("No members found.");
+                            } else {
+                                for(LibraryMember members : library.getMembers()) {
+                                    System.out.println(members);
+                                }
+                            }
+                            break;
+                        case 7:
+                            System.out.println("\nALL LIBRARY LIBRARIANS: ");
+                            if (library.getLibrarian().isEmpty()) {
+                                System.out.println("No librarians found.");
+                            } else {
+                                for(Librarian librarians : library.getLibrarian()) {
+                                    System.out.println(librarians);
+                                }
+                            }
+                            break;
+                        case 8:
                             break;
                         default:
                             System.out.println("Invalid Option"); break;
