@@ -1,0 +1,3 @@
+Name,Age,Email,PhoneNumber,MemberId,MembershipDate,Address
+Alice Johnson,25,alice@email.com,555-1234,M001,2024-01-01,"456 Oak St,Bookville,MD,12347"
+Bob Wilson,35,bob@email.com,555-4321,M002,2024-01-01,"654 Maple St,Media,PA,12346"
