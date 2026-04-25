@@ -86,7 +86,7 @@ public class CLI{
                     } else {
                         foundMember.borrowItem(foundItem);
                     }
-                    System.out.println("\nYou successfully borrowed: " + foundItem.getId() + " | " + foundItem.getTitle());
+                    System.out.println("\nYou successfully borrowed: " + foundItem.getItemType() + " | " + foundItem.getId() + " | " + foundItem.getTitle());
                     break;
                 case 3: 
                     System.out.println("\nEnter member ID: ");
@@ -140,7 +140,7 @@ public class CLI{
                     if(fee > 0) {
                         System.out.println("\nLate fees: $" + fee);
                     }
-                    System.out.println("You successfully returned: " + foundItem1.getId() + " | " + foundItem1.getTitle());
+                    System.out.println("You successfully returned: " + foundItem1.getItemType() + " | " + foundItem1.getId() + " | " + foundItem1.getTitle());
                     break;
                 case 4: 
                     System.out.println("\n1. View All");
