@@ -20,7 +20,7 @@ public class PeriodicalLoader {
                     continue;
                 }
 
-                String[] parts = line.split(",");
+                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 if(parts.length < 8) {
                     System.out.println("Invalid Data: " + line);

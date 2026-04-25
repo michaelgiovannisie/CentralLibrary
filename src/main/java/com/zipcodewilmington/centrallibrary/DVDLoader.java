@@ -14,7 +14,7 @@ public class DVDLoader {
                     firstLine = false;
                     continue;
                 }
-                String[] parts = line.split(",");
+                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                 if(parts.length < 7) {
                     System.out.println("Invalid Data: " + line);
                     continue;
