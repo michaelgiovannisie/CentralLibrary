@@ -93,6 +93,6 @@ public class Book extends LibraryItem {
 
     @Override
     public String getItemType() {
-        return "book";
+        return "Book";
     }
 }
