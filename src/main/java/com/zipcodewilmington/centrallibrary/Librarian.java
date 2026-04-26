@@ -23,7 +23,7 @@ public class Librarian extends Person {
     return "Name: " + getName() + " | Age: " + getAge() + 
     " | Email: " + getEmail() + " | Phone Number: " + getPhoneNumber() + 
     " | Employee ID: " + employeeId + " | Department: " + department + 
-    " | Salary: $" + formatter.format(salary);
+    " | Salary: " + formatter.format(salary);
     }
 
     public String getEmployeeId() {
