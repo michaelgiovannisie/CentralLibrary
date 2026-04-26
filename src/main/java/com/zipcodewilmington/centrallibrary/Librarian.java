@@ -1,5 +1,8 @@
 package com.zipcodewilmington.centrallibrary;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Librarian extends Person {
     
     private String employeeId;
@@ -16,10 +19,11 @@ public class Librarian extends Person {
 
     @Override
     public String toString() {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
     return "Name: " + getName() + " | Age: " + getAge() + 
     " | Email: " + getEmail() + " | Phone Number: " + getPhoneNumber() + 
     " | Employee ID: " + employeeId + " | Department: " + department + 
-    " | Salary: $" + salary;
+    " | Salary: $" + formatter.format(salary);
     }
 
     public String getEmployeeId() {

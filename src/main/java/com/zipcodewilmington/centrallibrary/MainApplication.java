@@ -17,6 +17,6 @@ public class MainApplication {
         PeriodicalLoader periodicalLoader = new PeriodicalLoader();
         periodicalLoader.loadPeriodical("src/main/java/com/zipcodewilmington/centrallibrary/periodical.csv",library);
         CLI cli = new CLI(library);
-        cli.userInterface();
+        cli.LMS();
     }
 }

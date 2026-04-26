@@ -15,7 +15,7 @@ public class CLI{
         this.scanner = new Scanner(System.in);
     }
 
-    public void userInterface() {
+    public void LMS() {
         boolean isRunning = true;
 
         do {
