@@ -1,7 +1,9 @@
 package com.zipcodewilmington.centrallibrary;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Library {
 
@@ -65,10 +67,11 @@ public class Library {
 
     public void generateLateFeeReport() {
         boolean found = false;
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
         for (LibraryMember member : members) {
             double fees = member.getOutstandingFees();
             if (fees > 0) {
-                System.out.println(member.getName() + " | Outstanding Fees: $" + fees);
+                System.out.println(member.getName() + " | Outstanding Fees: " + formatter.format(fees));
                 found = true;
             }
         }

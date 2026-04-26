@@ -1,6 +1,8 @@
 package com.zipcodewilmington.centrallibrary;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class CLI{
@@ -163,37 +165,35 @@ public class CLI{
     }
 
     private int getPositiveInt(String prompt) {
+        System.out.println(prompt);
         while (true) {
-            System.out.println(prompt);
-            if (scanner.hasNextInt()) {
-                int value = scanner.nextInt();
-                scanner.nextLine(); 
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
                 if (value > 0) {
                     return value;
                 } else {
                     System.out.println("Please enter a positive number.");
                 }
-            } else {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine(); 
             }
         }
     }
 
     private double getPositiveDouble(String prompt) {
+        System.out.println(prompt);
         while (true) {
-            System.out.println(prompt);
-            if (scanner.hasNextDouble()) {
-                double value = scanner.nextDouble();
-                scanner.nextLine();
+            String input = scanner.nextLine().trim();
+            try {
+                double value = Double.parseDouble(input);
                 if (value > 0) {
                     return value;
                 } else {
                     System.out.println("Please enter a positive number.");
                 }
-            } else {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
             }
         }
     }
@@ -345,9 +345,10 @@ public class CLI{
         int maxDays = foundItem1.getMaxBorrowDays();
         int daysLate = Math.max(0, daysBorrowed - maxDays);
         double fee = foundItem1.calculateLateFee(daysLate);
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
         foundMember1.returnItem(foundItem1, daysLate);
         if(fee > 0) {
-            System.out.println("\nLate fees: $" + fee);
+            System.out.println("\nLate fees: " + formatter.format(fee));
         }
         System.out.println("Item successfully returned: " + foundItem1.getItemType() + 
         " | ID: " + foundItem1.getId() + " | Title: " + foundItem1.getTitle());
