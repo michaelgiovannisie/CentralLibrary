@@ -10,7 +10,8 @@ public class Periodical extends LibraryItem {
     private String publicationDate; 
 
 
-    public Periodical(String id, String title, String location, String publisher, String issn, int volume, int issueNumber, String publicationDate) {
+    public Periodical(String id, String title, String location, String publisher, 
+        String issn, int volume, int issueNumber, String publicationDate) {
         super(id, title, location);       
         this.publisher = publisher; 
         this.issn = issn; 

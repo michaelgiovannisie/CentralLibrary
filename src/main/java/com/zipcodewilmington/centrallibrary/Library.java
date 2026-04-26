@@ -43,6 +43,10 @@ public class Library {
         librarians.add(librarian);
     }
 
+    public void removeLibrarian(Librarian librarian) {
+        librarians.remove(librarian);
+    }
+
     public List<LibraryItem> search(String keyword) {
         List<LibraryItem> results = new ArrayList<>();
         for(LibraryItem item : items){
@@ -54,10 +58,10 @@ public class Library {
     }
 
     public void displayAllItems() {
-    for (LibraryItem item : items) {
-        System.out.println(item);
+        for (LibraryItem item : items) {
+            System.out.println(item);
+        }
     }
-}
 
     public void generateLateFeeReport() {
         int daysLate = 3;
@@ -73,5 +77,53 @@ public class Library {
         }
     }
 
+    public LibraryMember findMemberById(String memberId) {
+        for (LibraryMember m : members) {
+            if (m.getMemberId().equals(memberId)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public LibraryItem findItemById(String itemId) {
+        for (LibraryItem i : items) {
+            if (i.getId().equals(itemId)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    public LibraryItem findBorrowedItem(LibraryMember member, String itemId) {
+        for (LibraryItem i : member.getBorrowedItems()) {
+            if (i.getId().equals(itemId)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    public boolean itemExists(String id) {
+        for (LibraryItem item : items) {
+            if (item.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeMember(LibraryMember member) {
+        members.remove(member);
+    }
+
+    public Librarian findLibrarianById(String id) {
+        for (Librarian l : librarians) {
+            if (l.getEmployeeId().equals(id)) {
+                return l;
+            }
+        }
+        return null;
+    }
 
 }

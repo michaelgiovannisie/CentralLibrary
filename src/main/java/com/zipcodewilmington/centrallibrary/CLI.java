@@ -7,6 +7,8 @@ public class CLI{
 
     private Library library;
     private Scanner scanner;
+    private String memberId;
+    private String itemId;
 
     public CLI(Library library){
         this.library = library;
@@ -17,240 +19,584 @@ public class CLI{
         boolean isRunning = true;
 
         do {
-            System.out.println("\nMichael's Library Management System");
-            System.out.println("1. Search");
-            System.out.println("2. Borrow");
-            System.out.println("3. Return");
-            System.out.println("4. View");
-            System.out.println("5. Exit");
-            System.out.println("Please enter your choice: ");
-
-            int option;
-            if(scanner.hasNextInt()) {
-                option = scanner.nextInt();
-                scanner.nextLine();
-            } else {
-                System.out.println("Invalid input.");
-                scanner.nextLine();
-                continue;
-            }
-            String memberId;
-            String itemId;
-            
+            printMainMenu();
+            int option = getPositiveInt("Please enter your choice:");
             switch(option) {
                 case 1: 
-                    System.out.println("\nEnter search keyword: ");
-                    String keyword = scanner.nextLine().trim();
-                    List<LibraryItem> result = library.search(keyword);
-                    if(result.isEmpty()){
-                        System.out.println("No items found");
-                    } else {
-                        System.out.println("\nSearch result: ");
-                        for(LibraryItem item    : result){
-                            System.out.println(item);
-                        }
-                    }
+                    handleSearch();
                     break;
-                case 2: 
-                    System.out.println("\nEnter member ID to borrow: ");
-                    memberId = scanner.nextLine().trim();
-                    LibraryMember foundMember = null;
-                    for(LibraryMember m : library.getMembers()) {
-                        if(m.getMemberId().equals(memberId)) {
-                            foundMember = m;
-                            break;
-                        }
-                    }
-                    if (foundMember == null) {
-                        System.out.println("Member not found.");
-                        break;
-                    } else {
-                        System.out.println("Member found: " + foundMember.getName());
-                    }
-                    System.out.println("\nEnter item ID: ");
-                    itemId = scanner.nextLine().trim();
-                    LibraryItem foundItem = null;
-                    for(LibraryItem i : library.getItems()) {
-                        if(i.getId().equals(itemId)) {
-                            foundItem = i;
-                            break;
-                        }
-                    }
-                    if(foundItem == null) {
-                        System.out.println("No items found");
-                        break;
-                    }
-                    if (!foundItem.isAvailable()) {
-                        System.out.println("Item is not available");
-                        break;
-                    } else {
-                        foundMember.borrowItem(foundItem);
-                    }
-                    System.out.println("\nYou successfully borrowed: " + foundItem.getItemType() + " | " + foundItem.getId() + " | " + foundItem.getTitle());
-                    break;
-                case 3: 
-                    System.out.println("\nEnter member ID: ");
-                    memberId = scanner.nextLine().trim();
-                    LibraryMember foundMember1 = null;
-                    for(LibraryMember n : library.getMembers()) {
-                        if(n.getMemberId().equals(memberId)) {
-                            foundMember1 = n;
-                            break;
-                        }
-                    }
-                    if(foundMember1 == null) {
-                        System.out.println("Member not found.");
-                        break;
-                    } else {
-                        System.out.println("Member found: " + foundMember1.getName());
-                    }
-                    System.out.println("\nBooks you borrowed: ");
-                    for (LibraryItem item : foundMember1.getBorrowedItems()) {
-                        System.out.println(item.getId() + " | " + item.getTitle());
-                    }
-                    System.out.println("\nEnter item ID to return: ");
-                    itemId = scanner.nextLine().trim();
-                    LibraryItem foundItem1 = null;
-                    for(LibraryItem i : foundMember1.getBorrowedItems()) {
-                        if (i.getId().equals(itemId)) {
-                            foundItem1 = i;
-                            break;
-                        }
-                    }
-                    if (foundItem1 == null) {
-                        System.out.println("Item not borrowed by this member.");
-                        break;
-                    }
-                    System.out.println("\nEnter number of days late: ");
-                    int daysLate;
-                    if(scanner.hasNextInt()) {
-                        daysLate = scanner.nextInt();
-                        scanner.nextLine();
-                    } else {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
-                        continue;
-                    }
-                    if(daysLate < 0) {
-                        System.out.println("Please enter positive number.");
-                        break;
-                    } 
-                    double fee = foundItem1.calculateLateFee(daysLate);
-                    foundMember1.returnItem(foundItem1, daysLate);
-                    if(fee > 0) {
-                        System.out.println("\nLate fees: $" + fee);
-                    }
-                    System.out.println("You successfully returned: " + foundItem1.getItemType() + " | " + foundItem1.getId() + " | " + foundItem1.getTitle());
-                    break;
-                case 4: 
-                    System.out.println("\n1. View All");
-                    System.out.println("2. View All Books");
-                    System.out.println("3. View All DVDs");
-                    System.out.println("4. View All Music"); 
-                    System.out.println("5. View All Periodicals");
-                    System.out.println("6. View All Members"); 
-                    System.out.println("7. View All Librarians"); 
-                    System.out.println("8. Back");
-                    System.out.println("Please enter your choice: ");
-                    int option2;
-                    if(scanner.hasNextInt()) {
-                        option2 = scanner.nextInt();
-                        scanner.nextLine();
-                    } else {
-                        System.out.println("Invalid input.");
-                        scanner.nextLine();
-                        continue;
-                    }
+                case 2:
+                    printBorrowReturnMenu();
+                    int option2 = getPositiveInt("Please enter your choice:");
                     switch (option2) {
-                        case 1:
-                            System.out.println("\nALL LIBRARY ITEMS: ");
-                            if (library.getItems().isEmpty()) {
-                                System.out.println("No Items found.");
-                            } else {
-                                library.displayAllItems();
-                            }
+                        case 1 :
+                            handleBorrow();
                             break;
-                        case 2:
-                            System.out.println("\nALL LIBRARY Books: ");
-                            boolean found1 = false;
-                            for (LibraryItem item : library.getItems()) {
-                                if (item instanceof Book) {
-                                    System.out.println(item);
-                                    found1 = true;
-                                }
-                            }
-                            if (!found1) {
-                                System.out.println("No Books found.");
-                            }
+                        case 2 :
+                            handleReturn();
                             break;
                         case 3:
-                            System.out.println("\nALL LIBRARY DVDs: ");
-                            boolean found2 = false;
-                            for (LibraryItem item : library.getItems()) {
-                                if (item instanceof DVD) {
-                                    System.out.println(item);
-                                    found2 = true;
-                                }
-                            }
-                            if (!found2) {
-                                System.out.println("No DVDs found.");
-                            }
-                            break;
-                        case 4:
-                            System.out.println("\nALL LIBRARY Music: ");
-                            boolean found3 = false;
-                            for (LibraryItem item : library.getItems()) {
-                                if (item instanceof Music) {
-                                    System.out.println(item);
-                                    found3 = true;
-                                }
-                            }
-                            if (!found3) {
-                                System.out.println("No Music found.");
-                            }
-                            break;
-                        case 5:
-                            System.out.println("\nALL LIBRARY Periodical: ");
-                            boolean found4 = false;
-                            for (LibraryItem item : library.getItems()) {
-                                if (item instanceof Periodical) {
-                                    System.out.println(item);
-                                    found4 = true;
-                                }
-                            }
-                            if (!found4) {
-                                System.out.println("No Periodicals found.");
-                            }
-                            break;
-                        case 6:
-                            System.out.println("\nALL LIBRARY MEMBERS: ");
-                            if (library.getMembers().isEmpty()) {
-                                System.out.println("No members found.");
-                            } else {
-                                for(LibraryMember members : library.getMembers()) {
-                                    System.out.println(members);
-                                }
-                            }
-                            break;
-                        case 7:
-                            System.out.println("\nALL LIBRARY LIBRARIANS: ");
-                            if (library.getLibrarian().isEmpty()) {
-                                System.out.println("No librarians found.");
-                            } else {
-                                for(Librarian librarians : library.getLibrarian()) {
-                                    System.out.println(librarians);
-                                }
-                            }
-                            break;
-                        case 8:
                             break;
                         default:
                             System.out.println("Invalid Option"); break;
                     }
                     break;
-                case 5: System.out.println("GoodBye!"); isRunning = false; break;
+                case 3: 
+                    printViewMenu();
+                    int option3 = getPositiveInt("Please enter your choice:");
+                    switch (option3) {
+                        case 1:
+                            handleDisplayAll();
+                            break;
+                        case 2:
+                            handleDisplayBook();
+                            break;
+                        case 3:
+                            handleDisplayDVD();
+                            break;
+                        case 4:
+                            handleDisplayMusic();
+                            break;
+                        case 5:
+                            handleDisplayPeriodical();
+                            break;
+                        case 6:
+                            handleDisplayMember();
+                            break;
+                        case 7:
+                            handleDisplayLibrarian();
+                            break;
+                        case 8:
+                            break;
+                        default:
+                            System.out.println("Invalid Option");
+                            break;
+                    }
+                    break;
+                case 4: 
+                    printTransactionMenu();
+                    int option4 = getPositiveInt("Please enter your choice:");
+                    switch (option4) {
+                        case 1 :
+                            handlePayFees();
+                            break;
+                        case 2 :
+                            handleLateFeeReport();
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("Invalid Option"); break;
+                    }
+                    break;
+                case 5: 
+                    printAddRemoveItemMenu();
+                    int option5 = getPositiveInt("Please enter your choice:");
+                    switch (option5) {
+                        case 1 :
+                            printAddItemMenu();
+                            int option5a = getPositiveInt("Please enter your choice:");
+                            switch (option5a) {
+                                case 1:
+                                    handleAddBook();
+                                    break;
+                                case 2:
+                                    handleAddDVD();
+                                    break;
+                                case 3:
+                                    handleAddMusic();
+                                    break;
+                                case 4:
+                                    handleAddPeriodical();
+                                    break;
+                                case 5:
+                                    break;
+                                default:
+                                System.out.println("Invalid Option"); break;
+                            }
+                            break;
+                        case 2 :
+                            handleRemoveItem();
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("Invalid Option"); break;
+                    }
+                    break;
+                case 6:  
+                    printAddRemoveMemberMenu();
+                    int option6 = getPositiveInt("Please enter your choice:");
+                    switch (option6) {
+                        case 1 :
+                            handleAddMember();
+                            break;
+                        case 2 :
+                            handleRemoveMember();
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("Invalid Option"); break;
+                    }
+                    break;
+                case 7: 
+                    printAddRemoveLibrarianMenu();
+                    int option7 = getPositiveInt("Please enter your choice:");
+                    switch (option7) {
+                        case 1 :
+                            handleAddLibrarian();
+                            break;
+                        case 2 :
+                            handleRemoveLibrarian();
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("Invalid Option"); break;
+                    }
+                    break;
+                case 8: System.out.println("GoodBye!"); isRunning = false; break;
                 default: System.out.println("Invalid Option"); break;
             }
         } while (isRunning);
     }
+
+    private int getPositiveInt(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            if (scanner.hasNextInt()) {
+                int value = scanner.nextInt();
+                scanner.nextLine(); 
+                if (value > 0) {
+                    return value;
+                } else {
+                    System.out.println("Please enter a positive number.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); 
+            }
+        }
+    }
+
+    private double getPositiveDouble(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            if (scanner.hasNextDouble()) {
+                double value = scanner.nextDouble();
+                scanner.nextLine();
+                if (value > 0) {
+                    return value;
+                } else {
+                    System.out.println("Please enter a positive number.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    public void printMainMenu() {
+        System.out.println("\nMichael's Library Management System");
+            System.out.println("1. Search");
+            System.out.println("2. Borrow / Return Item");
+            System.out.println("3. View Items");
+            System.out.println("4. Transaction");
+            System.out.println("5. Add / Remove Item");
+            System.out.println("6. Add / Remove Member");
+            System.out.println("7. Add / Remove Librarian");
+            System.out.println("8. Exit");
+    }
+
+    public void printBorrowReturnMenu() {
+            System.out.println("\n1. Borrow");
+            System.out.println("2. Return"); 
+            System.out.println("3. Back"); 
+    }
+
+    public void printViewMenu() {
+            System.out.println("\n1. View All");
+            System.out.println("2. View All Books");
+            System.out.println("3. View All DVDs");
+            System.out.println("4. View All Music"); 
+            System.out.println("5. View All Periodicals");
+            System.out.println("6. View All Members"); 
+            System.out.println("7. View All Librarians"); 
+            System.out.println("8. Back");
+    }
+
+    public void printTransactionMenu() {
+            System.out.println("\n1. Pay Fees");
+            System.out.println("2. Late Fee Report");
+            System.out.println("3. Back"); 
+    }
+
+    public void printAddRemoveItemMenu() {
+            System.out.println("\n1. Add Item");
+            System.out.println("2. Remove Item");
+            System.out.println("3. Back");
+    }
+
+    public void printAddItemMenu() {
+            System.out.println("\n1. Book");
+            System.out.println("2. DVD");
+            System.out.println("3. Music");
+            System.out.println("4. Periodical");
+            System.out.println("5. Back");
+    }
+
+    public void printAddRemoveMemberMenu() {
+            System.out.println("\n1. Add Member");
+            System.out.println("2. Remove Member");
+            System.out.println("3. Back");
+    }
+
+    public void printAddRemoveLibrarianMenu() {
+            System.out.println("\n1. Add Librarian");
+            System.out.println("2. Remove Librarian");
+            System.out.println("3. Back"); 
+    }
+
+    public void printBorrowedItems(LibraryMember member) {
+        if (member.getBorrowedItems().isEmpty()) {
+            System.out.println("No borrowed items.");
+            return;
+        }
+
+        for (LibraryItem item : member.getBorrowedItems()) {
+            System.out.println(item.getItemType() + " | " + item.getId() + " | " + item.getTitle());
+        }
+    }
+
+    private String getNonEmptyInput(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.println("Input cannot be empty.");
+        }
+    }
+
+    public void handleSearch () {
+        System.out.println("\nEnter search keyword: ");
+        String keyword = scanner.nextLine().trim();
+        List<LibraryItem> result = library.search(keyword);
+        if(result.isEmpty()){
+            System.out.println("No items found");
+        } else {
+            System.out.println("\nSearch result: ");
+            for(LibraryItem item : result){
+                System.out.println(item);
+            }
+        }
+    }
+
+    public void handleBorrow() {
+        System.out.println("\nEnter member ID to borrow: ");
+        memberId = scanner.nextLine().trim();
+        LibraryMember foundMember = library.findMemberById(memberId);
+        if (foundMember == null) {
+            System.out.println("Member not found.");
+            return;
+        } else {
+            System.out.println("Member found: " + foundMember.getName());
+        }
+        System.out.println("\nEnter item ID: ");
+        itemId = scanner.nextLine().trim();
+        LibraryItem foundItem = library.findItemById(itemId);
+        if(foundItem == null) {
+            System.out.println("No items found");
+            return;
+        }
+        if (!foundItem.isAvailable()) {
+            System.out.println("Item is not available");
+            return;
+        }
+        foundMember.borrowItem(foundItem);
+        System.out.println("\nItem successfully borrowed: " + foundItem.getItemType() + 
+        " | " + foundItem.getId() + " | " + foundItem.getTitle());
+    }
+
+    public void handleReturn() {
+        System.out.println("\nEnter member ID: ");
+        memberId = scanner.nextLine().trim();
+        LibraryMember foundMember1 = library.findMemberById(memberId);
+        if(foundMember1 == null) {
+            System.out.println("Member not found.");
+            return;
+        } else {
+            System.out.println("Member found: " + foundMember1.getName());
+        }
+        System.out.println("\nItems you borrowed: ");
+        printBorrowedItems(foundMember1);
+        System.out.println("\nEnter item ID to return: ");
+        itemId = scanner.nextLine().trim();
+        LibraryItem foundItem1 = library.findBorrowedItem(foundMember1, itemId);
+        if (foundItem1 == null) {
+            System.out.println("Item not borrowed by this member.");
+            return;
+        }
+        System.out.println("\nEnter number of days borrowed: ");
+        int daysBorrowed = getPositiveInt("Enter days borrowed:");
+        int maxDays = foundItem1.getMaxBorrowDays();
+        int daysLate = Math.max(0, daysBorrowed - maxDays);
+        double fee = foundItem1.calculateLateFee(daysLate);
+        foundMember1.returnItem(foundItem1, daysLate);
+        if(fee > 0) {
+            System.out.println("\nLate fees: $" + fee);
+        }
+        System.out.println("Item successfully returned: " + foundItem1.getItemType() + 
+        " | " + foundItem1.getId() + " | " + foundItem1.getTitle());
+    }
+
+    public void handleDisplayAll() {
+        System.out.println("\nALL LIBRARY ITEMS: ");
+        if (library.getItems().isEmpty()) {
+            System.out.println("No Items found.");
+        } else {
+            library.displayAllItems();
+        }
+    }
+
+    public void handleDisplayBook() {
+        System.out.println("\nALL LIBRARY BOOKS: ");
+        boolean foundBooks = false;
+        for (LibraryItem item : library.getItems()) {
+            if (item instanceof Book) {
+                System.out.println(item);
+                foundBooks = true;
+            }
+        }
+        if (!foundBooks) {
+            System.out.println("No Books found.");
+        }
+    }
+
+    public void handleDisplayDVD () {
+        System.out.println("\nALL LIBRARY DVDs: ");
+        boolean foundDVD = false;
+        for (LibraryItem item : library.getItems()) {
+            if (item instanceof DVD) {
+                System.out.println(item);
+                foundDVD = true;
+            }
+        }
+        if (!foundDVD) {
+            System.out.println("No DVDs found.");
+        }
+    }
+
+    public void handleDisplayMusic () {
+        System.out.println("\nALL LIBRARY MUSIC: ");
+        boolean foundMusic = false;
+        for (LibraryItem item : library.getItems()) {
+            if (item instanceof Music) {
+                System.out.println(item);
+                foundMusic = true;
+            }
+        }
+        if (!foundMusic) {
+            System.out.println("No Music found.");
+        }
+    }
+
+    public void handleDisplayPeriodical () {
+        System.out.println("\nALL LIBRARY PERIODICALS: ");
+        boolean foundPeriodical = false;
+        for (LibraryItem item : library.getItems()) {
+            if (item instanceof Periodical) {
+                System.out.println(item);
+                foundPeriodical = true;
+            }
+        }
+        if (!foundPeriodical) {
+            System.out.println("No Periodicals found.");
+        }
+    }
+
+    public void handleDisplayMember() {
+        System.out.println("\nALL LIBRARY MEMBERS: ");
+        if (library.getMembers().isEmpty()) {
+            System.out.println("No members found.");
+        } else {
+            for (LibraryMember m : library.getMembers()) {
+                System.out.println(m);
+            }
+        }
+    }
+
+    public void handleDisplayLibrarian() {
+        System.out.println("\nALL LIBRARY LIBRARIANS: ");
+        if (library.getLibrarian().isEmpty()) {
+            System.out.println("No librarians found.");
+        } else {
+            for (Librarian l : library.getLibrarian()) {
+                System.out.println(l);
+            }
+        }
+    }
+
+    public void handleAddBook() {
+        String id = getNonEmptyInput("Enter ID: ");
+        if (library.itemExists(id)) {
+        System.out.println("Item with this ID already exists.");
+            return;
+        }
+        String title = getNonEmptyInput("Enter Title: ");
+        String location = getNonEmptyInput("Enter Location: ");
+        String author = getNonEmptyInput("Enter Author: ");
+        String isbn = getNonEmptyInput("Enter ISBN: ");
+        int pages = getPositiveInt("Enter Pages: ");
+        String genre = getNonEmptyInput("Enter genre: ");
+        Book newBook = new Book(id, title, location, author, isbn, pages, genre);
+        library.addItem(newBook);
+        System.out.println("Book added: " + id + " | " + title);
+    }
+
+    public void handleAddDVD() {
+        String id = getNonEmptyInput("Enter ID: ");
+        if (library.itemExists(id)) {
+        System.out.println("Item with this ID already exists.");
+            return;
+        }
+        String title = getNonEmptyInput("Enter Title: ");
+        String location = getNonEmptyInput("Enter Location: ");
+        String director = getNonEmptyInput("Enter Director: ");
+        int duration = getPositiveInt("Enter Duration (minutes): ");
+        String rating = getNonEmptyInput("Enter Rating: ");
+        String genre = getNonEmptyInput("Enter genre: ");
+        DVD newDVD = new DVD(id, title, location, director, duration, rating, genre);
+        library.addItem(newDVD);
+        System.out.println("DVD added: " + id + " | " + title);
+    }
+
+    public void handleAddMusic() {
+        String id = getNonEmptyInput("Enter ID: ");
+        if (library.itemExists(id)) {
+        System.out.println("Item with this ID already exists.");
+            return;
+        }
+        String title = getNonEmptyInput("Enter Title: ");
+        String location = getNonEmptyInput("Enter Location: ");
+        String artist = getNonEmptyInput("Enter Artist: ");
+        String date = getNonEmptyInput("Enter Date: ");
+        String genre = getNonEmptyInput("Enter Genre: ");
+        String lyrics = getNonEmptyInput("Enter Lyrics: ");
+        int length = getPositiveInt("Enter Length (seconds): ");
+        Music newMusic = new Music(id, title, location, artist, date, genre, lyrics, length);
+        library.addItem(newMusic);
+        System.out.println("Music added: " + id + " | " + title);
+    }
+
+    public void handleAddPeriodical() {
+        String id = getNonEmptyInput("Enter ID: ");
+        if (library.itemExists(id)) {
+        System.out.println("Item with this ID already exists.");
+            return;
+        }
+        String title = getNonEmptyInput("Enter Title: ");
+        String location = getNonEmptyInput("Enter Location: ");
+        String publisher = getNonEmptyInput("Enter Publisher: ");
+        String issn = getNonEmptyInput("Enter ISSN: ");
+        int volume = getPositiveInt("Enter Volume: ");
+        int issueNumber = getPositiveInt("Enter Issue Number: ");
+        String publicationDate = getNonEmptyInput("Enter Publication Date: ");
+        Periodical newPeriodical = new Periodical(id, title, location, publisher, issn, 
+            volume, issueNumber, publicationDate);
+        library.addItem(newPeriodical);
+        System.out.println("Periodical added: " + id + " | " + title);
+    }
+
+    public void handleRemoveItem() {
+        System.out.println("\nEnter item ID to remove: ");
+        String removeI = scanner.nextLine().trim();
+        LibraryItem removedItem = library.findItemById(removeI);
+        if (removedItem == null) {
+            System.out.println("Item doesn't exist.");
+            return;
+        }
+        library.removeItem(removedItem);
+        System.out.println("Item successfully removed: "
+            + removedItem.getItemType() + " | "
+            + removedItem.getId() + " | "
+            + removedItem.getTitle());
+    }
+
+    public void handleAddMember() {
+        String name = getNonEmptyInput("Enter Name: ");
+        int age = getPositiveInt("Enter Age: ");
+        String email = getNonEmptyInput("Enter Email: ");
+        String phone = getNonEmptyInput("Enter Phone Number: ");
+        String memberId = getNonEmptyInput("Enter Member ID: ");
+        String membershipDate = getNonEmptyInput("Enter Membership Date (YYYY-MM-DD): ");
+        String street = getNonEmptyInput("Enter Street: ");
+        String city = getNonEmptyInput("Enter City: ");
+        String state = getNonEmptyInput("Enter State: ");
+        String zip = getNonEmptyInput("Enter Zip Code: ");
+        Address address = new Address(street, city, state, zip);
+        LibraryMember member = new LibraryMember(
+            name, age, email, phone, memberId, membershipDate, address
+        );
+        library.addMember(member);
+        System.out.println("Member added: " + memberId + " | " + name);
+    }
+
+    public void handleRemoveMember() {
+        String memberId = getNonEmptyInput("Enter Member ID: ");
+        LibraryMember member = library.findMemberById(memberId);
+        if (member == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+        library.removeMember(member);
+        System.out.println("Member removed: " + memberId + " | " + member.getName());
+    }
+
+    public void handleAddLibrarian() {
+        String name = getNonEmptyInput("Enter Name: ");
+        int age = getPositiveInt("Enter Age: ");
+        String email = getNonEmptyInput("Enter Email: ");
+        String phoneNumber = getNonEmptyInput("Enter Phone Number: ");
+        String employeeId = getNonEmptyInput("Enter Librarian ID: ");
+        String department = getNonEmptyInput("Enter Department: ");
+        double salary = getPositiveDouble("Enter Salary: ");
+        Librarian librarian = new Librarian(name, age, email, phoneNumber, employeeId, department, salary);
+        library.addLibrarian(librarian);
+        System.out.println("Librarian added: " + employeeId + " | " + name);
+    }
+
+    public void handleRemoveLibrarian() {
+        String id = getNonEmptyInput("Enter Librarian ID: ");
+        Librarian librarian = library.findLibrarianById(id);
+        if (librarian == null) {
+            System.out.println("Librarian not found.");
+            return;
+        }
+        library.removeLibrarian(librarian);
+        System.out.println("Librarian removed: " + id + " | " + librarian.getName());
+    }
+
+    public void handlePayFees() {
+        memberId = getNonEmptyInput("Enter Member ID: ");
+        LibraryMember member = library.findMemberById(memberId);
+        if (member == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+        System.out.println("Outstanding fees: $" + member.getOutstandingFees());
+        double amount = getPositiveDouble("Enter payment amount: ");
+        member.payFees(amount);
+        System.out.println("Payment successful.");
+        System.out.println("Remaining balance: $" + member.getOutstandingFees());
+    }
+
+    public void handleLateFeeReport() {
+        System.out.println("\nLATE FEE REPORT:");
+        library.generateLateFeeReport();
+    }
+
 }
