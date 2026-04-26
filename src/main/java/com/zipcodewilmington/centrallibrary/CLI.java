@@ -202,7 +202,7 @@ public class CLI{
         System.out.println("\nMichael's Library Management System");
             System.out.println("1. Search");
             System.out.println("2. Borrow / Return Item");
-            System.out.println("3. View Items");
+            System.out.println("3. View Data");
             System.out.println("4. Transaction");
             System.out.println("5. Add / Remove Item");
             System.out.println("6. Add / Remove Member");
@@ -266,7 +266,7 @@ public class CLI{
         }
 
         for (LibraryItem item : member.getBorrowedItems()) {
-            System.out.println(item.getItemType() + " | " + item.getId() + " | " + item.getTitle());
+            System.out.println(item.getItemType() + " | ID: " + item.getId() + " | Title: " + item.getTitle());
         }
     }
 
@@ -303,7 +303,7 @@ public class CLI{
             System.out.println("Member not found.");
             return;
         } else {
-            System.out.println("Member found: " + foundMember.getName());
+            System.out.println("Member found: Name: " + foundMember.getName());
         }
         System.out.println("\nEnter item ID: ");
         itemId = scanner.nextLine().trim();
@@ -318,7 +318,7 @@ public class CLI{
         }
         foundMember.borrowItem(foundItem);
         System.out.println("\nItem successfully borrowed: " + foundItem.getItemType() + 
-        " | " + foundItem.getId() + " | " + foundItem.getTitle());
+        " | ID: " + foundItem.getId() + " | Title: " + foundItem.getTitle());
     }
 
     public void handleReturn() {
@@ -329,7 +329,7 @@ public class CLI{
             System.out.println("Member not found.");
             return;
         } else {
-            System.out.println("Member found: " + foundMember1.getName());
+            System.out.println("Member found: Name:" + foundMember1.getName());
         }
         System.out.println("\nItems you borrowed: ");
         printBorrowedItems(foundMember1);
@@ -350,7 +350,7 @@ public class CLI{
             System.out.println("\nLate fees: $" + fee);
         }
         System.out.println("Item successfully returned: " + foundItem1.getItemType() + 
-        " | " + foundItem1.getId() + " | " + foundItem1.getTitle());
+        " | ID: " + foundItem1.getId() + " | Title: " + foundItem1.getTitle());
     }
 
     public void handleDisplayAll() {
@@ -454,7 +454,7 @@ public class CLI{
         String genre = getNonEmptyInput("Enter genre: ");
         Book newBook = new Book(id, title, location, author, isbn, pages, genre);
         library.addItem(newBook);
-        System.out.println("Book added: " + id + " | " + title);
+        System.out.println("Book added: ID: " + id + " | Title: " + title);
     }
 
     public void handleAddDVD() {
@@ -471,7 +471,7 @@ public class CLI{
         String genre = getNonEmptyInput("Enter genre: ");
         DVD newDVD = new DVD(id, title, location, director, duration, rating, genre);
         library.addItem(newDVD);
-        System.out.println("DVD added: " + id + " | " + title);
+        System.out.println("DVD added: ID: " + id + " | Title: " + title);
     }
 
     public void handleAddMusic() {
@@ -489,7 +489,7 @@ public class CLI{
         int length = getPositiveInt("Enter Length (seconds): ");
         Music newMusic = new Music(id, title, location, artist, date, genre, lyrics, length);
         library.addItem(newMusic);
-        System.out.println("Music added: " + id + " | " + title);
+        System.out.println("Music added: ID: " + id + " | Title: " + title);
     }
 
     public void handleAddPeriodical() {
@@ -508,7 +508,7 @@ public class CLI{
         Periodical newPeriodical = new Periodical(id, title, location, publisher, issn, 
             volume, issueNumber, publicationDate);
         library.addItem(newPeriodical);
-        System.out.println("Periodical added: " + id + " | " + title);
+        System.out.println("Periodical added: ID: " + id + " | Title: " + title);
     }
 
     public void handleRemoveItem() {
@@ -521,8 +521,8 @@ public class CLI{
         }
         library.removeItem(removedItem);
         System.out.println("Item successfully removed: "
-            + removedItem.getItemType() + " | "
-            + removedItem.getId() + " | "
+            + removedItem.getItemType() + " | ID: "
+            + removedItem.getId() + " | Title: "
             + removedItem.getTitle());
     }
 
@@ -542,7 +542,7 @@ public class CLI{
             name, age, email, phone, memberId, membershipDate, address
         );
         library.addMember(member);
-        System.out.println("Member added: " + memberId + " | " + name);
+        System.out.println("Member added: ID: " + memberId + " | Name: " + name);
     }
 
     public void handleRemoveMember() {
@@ -553,7 +553,7 @@ public class CLI{
             return;
         }
         library.removeMember(member);
-        System.out.println("Member removed: " + memberId + " | " + member.getName());
+        System.out.println("Member removed: ID: " + memberId + " | Name: " + member.getName());
     }
 
     public void handleAddLibrarian() {
@@ -566,7 +566,7 @@ public class CLI{
         double salary = getPositiveDouble("Enter Salary: ");
         Librarian librarian = new Librarian(name, age, email, phoneNumber, employeeId, department, salary);
         library.addLibrarian(librarian);
-        System.out.println("Librarian added: " + employeeId + " | " + name);
+        System.out.println("Librarian added: ID: " + employeeId + " | Name: " + name);
     }
 
     public void handleRemoveLibrarian() {
@@ -577,7 +577,7 @@ public class CLI{
             return;
         }
         library.removeLibrarian(librarian);
-        System.out.println("Librarian removed: " + id + " | " + librarian.getName());
+        System.out.println("Librarian removed: ID: " + id + " | Name: " + librarian.getName());
     }
 
     public void handlePayFees() {

@@ -64,16 +64,16 @@ public class Library {
     }
 
     public void generateLateFeeReport() {
-        int daysLate = 3;
-        
-        for(LibraryMember member : members) {
-            System.out.println(member.getName());
-            for(LibraryItem item : member.getBorrowedItems()) {
-                String type = item.getItemType();
-                int maxDays = item.getMaxBorrowDays();
-                double lateFees = item.calculateLateFee(daysLate);
-                System.out.println(type + " | Max Days: " + maxDays + " | Fee: " + lateFees);
+        boolean found = false;
+        for (LibraryMember member : members) {
+            double fees = member.getOutstandingFees();
+            if (fees > 0) {
+                System.out.println(member.getName() + " | Outstanding Fees: $" + fees);
+                found = true;
             }
+        }
+        if (!found) {
+            System.out.println("No outstanding fees.");
         }
     }
 

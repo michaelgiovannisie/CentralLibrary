@@ -33,7 +33,7 @@ public class BookLoader {
                     Book book = new Book(id,title,location,author,isbn,pages,genreClean);
                     library.addItem(book);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {

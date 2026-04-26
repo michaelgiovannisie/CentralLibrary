@@ -32,7 +32,7 @@ public class LibrarianLoader {
                     Librarian librarian = new Librarian(name,age,email,phoneNumber,employeeId,department,salary);
                     library.addLibrarian(librarian);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {

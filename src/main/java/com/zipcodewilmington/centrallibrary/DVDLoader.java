@@ -31,7 +31,7 @@ public class DVDLoader {
                     DVD dvd = new DVD(id,title,location,director,duration,rating,genre);
                     library.addItem(dvd);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {

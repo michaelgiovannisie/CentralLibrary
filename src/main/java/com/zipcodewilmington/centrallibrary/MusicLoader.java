@@ -33,7 +33,7 @@ public class MusicLoader {
                     Music music = new Music(id,title,location,artist,date,genre,lyrics,length);
                     library.addItem(music);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {

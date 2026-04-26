@@ -38,7 +38,7 @@ public class LibraryMemberLoader {
                     LibraryMember libraryMember = new LibraryMember(name,age,email,phoneNumber,memberId,membershipDate,address);
                     library.addMember(libraryMember);
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {

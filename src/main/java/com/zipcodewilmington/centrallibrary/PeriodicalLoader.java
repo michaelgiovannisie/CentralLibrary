@@ -45,7 +45,7 @@ public class PeriodicalLoader {
                     library.addItem(periodical);
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number in row: " + line);
+                    // System.out.println("Invalid number in row: " + line);
                 }
             }
         } catch (IOException e) {
