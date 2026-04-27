@@ -5,12 +5,36 @@ public abstract class LibraryItem implements Searchable {
     private String title;
     private String location;
     private boolean isAvailable;
+    private boolean isReserved;
+    private LibraryMember reservedBy;
 
     public LibraryItem(String id, String title, String location) {
         this.id = id; 
         this.title = title; 
         this.location = location; 
         this.isAvailable = true; 
+    }
+
+    public boolean isReserved() {
+        return isReserved;
+    }
+
+    public LibraryMember getReservedBy() {
+        return reservedBy;
+    }
+
+    public void reserve(LibraryMember member) {
+        if(!isReserved) {
+            isReserved = true;
+            reservedBy = member;
+        }
+    }
+
+    public void cancelReserve(LibraryMember member) {
+        if(isReserved && reservedBy == member) {
+            isReserved = false;
+            reservedBy = null;
+        }
     }
 
     public String getId() {

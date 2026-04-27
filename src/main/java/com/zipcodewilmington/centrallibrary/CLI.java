@@ -38,6 +38,12 @@ public class CLI{
                             handleReturn();
                             break;
                         case 3:
+                            handleReserve();
+                            break;
+                        case 4:
+                            handlecancelReservedItems();
+                            break;
+                        case 5:
                             break;
                         default:
                             System.out.println("Invalid Option"); break;
@@ -201,7 +207,7 @@ public class CLI{
     public void printMainMenu() {
         System.out.println("\nMichael's Library Management System");
             System.out.println("1. Search");
-            System.out.println("2. Borrow / Return Item");
+            System.out.println("2. Borrow / Return / Reserve");
             System.out.println("3. View Data");
             System.out.println("4. Transaction");
             System.out.println("5. Add / Remove Item");
@@ -213,7 +219,9 @@ public class CLI{
     public void printBorrowReturnMenu() {
             System.out.println("\n1. Borrow");
             System.out.println("2. Return"); 
-            System.out.println("3. Back"); 
+            System.out.println("3. Reserve"); 
+            System.out.println("4. Cancel Reserve"); 
+            System.out.println("5. Back"); 
     }
 
     public void printViewMenu() {
@@ -261,7 +269,7 @@ public class CLI{
 
     public void printBorrowedItems(LibraryMember member) {
         if (member.getBorrowedItems().isEmpty()) {
-            System.out.println("No borrowed items.");
+            System.out.println("No items borrowed.");
             return;
         }
 
@@ -313,7 +321,13 @@ public class CLI{
             return;
         }
         if (!foundItem.isAvailable()) {
-            System.out.println("Item is not available");
+            if(foundItem.isReserved() &&
+                foundItem.getReservedBy() != null &&
+                !foundItem.getReservedBy().getMemberId().equals(foundMember.getMemberId())) {
+                System.out.println("Item is reserved by other member.");
+            }
+            System.out.println(foundItem.getItemType() + " | " + foundItem.getId() + " | " + foundItem.getTitle());
+            System.out.println("Item is not available. You may reserve it.");
             return;
         }
         foundMember.borrowItem(foundItem);
@@ -598,6 +612,69 @@ public class CLI{
     public void handleLateFeeReport() {
         System.out.println("\nLATE FEE REPORT:");
         library.generateLateFeeReport();
+    }
+
+    public void handleReserve() {
+        String memberId = getNonEmptyInput("Enter member ID: ");
+        LibraryMember member = library.findMemberById(memberId);
+        if(member == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+        String itemId = getNonEmptyInput("Enter item ID: ");
+        LibraryItem item =library.findItemById(itemId);
+        if(item == null) {
+            System.out.println("Item not found.");
+            return;
+        }
+        if (item.isAvailable()) {
+            System.out.println(item.getItemType() + " | " + item.getId() + " | " + item.getTitle());
+            System.out.println("Item is available to borrow.");
+            return;
+        }
+        if (item.isReserved()) {
+            System.out.println(item.getItemType() + " | " + item.getId() + " | " + item.getTitle());
+            System.out.println("Item is already reserved.");
+            return;
+        }
+        item.reserve(member);
+        member.addReservedItem(item);
+        System.out.println("You have successfully reserved: " + item.getItemType() + " | " + 
+                            item.getId() + " | " + item.getTitle());
+    }
+
+    public void printReservedItems(LibraryMember member) {
+        if (member.getReservedItems().isEmpty()) {
+            System.out.println("No items reserved.");
+            return;
+        }
+
+        for (LibraryItem item : member.getReservedItems()) {
+            System.out.println(item.getItemType() + " | ID: " + item.getId() + " | Title: " + item.getTitle());
+        }
+    }
+
+    public void handlecancelReservedItems() {
+        String memberId = getNonEmptyInput("Enter member ID: ");
+        LibraryMember member = library.findMemberById(memberId);
+        if(member == null) {
+            System.out.println("Member not found.");
+            return;
+        }
+        printReservedItems(member);
+        String itemId = getNonEmptyInput("Enter item ID: ");
+        LibraryItem item =library.findItemById(itemId);
+        if(item == null) {
+            System.out.println("Item not found.");
+            return;
+        }
+        if(!item.isReserved() || item.getReservedBy() == null || !item.getReservedBy().getMemberId().equals(member.getMemberId())) {
+            System.out.println("You have no reservation for this item.");
+            return;     
+        }
+        item.cancelReserve(member);
+        member.removeReservedItem(item);
+        System.out.println("Reservation cancelled.");
     }
 
 }

@@ -9,6 +9,7 @@ public class LibraryMember extends Person {
     private List <LibraryItem> borrowedItems;
     private double outstandingFees;
     private Address address;
+    private List <LibraryItem> reservedItems;
     public LibraryMember(String name, int age, String email, String phoneNumber, String memberId, String membershipDate, Address address) {
         super(name, age, email, phoneNumber);
         this.memberId = memberId;
@@ -16,6 +17,7 @@ public class LibraryMember extends Person {
         this.address = address;
         this.borrowedItems = new ArrayList<>();
         this.outstandingFees = 0.0;
+        this.reservedItems = new ArrayList<>();
     }
     @Override
     public String toString() {
@@ -29,11 +31,35 @@ public class LibraryMember extends Person {
     public List<LibraryItem> getBorrowedItems() {
         return new ArrayList<>(borrowedItems); 
     }
+    public List<LibraryItem> getReservedItems() {
+        return new ArrayList<>(reservedItems);
+    }
     public void borrowItem(LibraryItem item) {
-        if (item.isAvailable()) {
-            item.checkOut();
-            borrowedItems.add(item);
+        if (borrowedItems.contains(item)) {
+            return;
         }
+        if (item.isAvailable()) {
+            if (item.isReserved() && item.getReservedBy() != null &&
+                !item.getReservedBy().getMemberId().equals(this.memberId)) {
+                return;
+            }
+            item.checkOut();
+            if (!borrowedItems.contains(item)) {
+                borrowedItems.add(item);
+            }
+            if (isReservedByMe(item)) {
+                reservedItems.remove(item);
+                item.cancelReserve(this);
+            }
+        }
+    }
+    public void addReservedItem(LibraryItem item) {
+        if (!reservedItems.contains(item)) {
+            reservedItems.add(item);
+        }
+    }
+    public void removeReservedItem(LibraryItem item) {
+        reservedItems.remove(item);
     }
     public void returnItem(LibraryItem item, int daysLate) {
         if (borrowedItems.contains(item)) {
@@ -50,5 +76,10 @@ public class LibraryMember extends Person {
                 outstandingFees = 0;
             }
         }
+    }
+    private boolean isReservedByMe(LibraryItem item) {
+        return item.isReserved() &&
+            item.getReservedBy() != null &&
+            item.getReservedBy().getMemberId().equals(this.memberId);
     }
 }
