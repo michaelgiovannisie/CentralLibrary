@@ -662,6 +662,7 @@ public class CLI{
             System.out.println("Member not found.");
             return;
         }
+        System.out.println("Items you reserved:");
         printReservedItems(member);
         String itemId = getNonEmptyInput("Enter item ID: ");
         LibraryItem item =library.findItemById(itemId);
