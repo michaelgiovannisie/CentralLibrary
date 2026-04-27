@@ -1,22 +1,18 @@
 package com.zipcodewilmington.centrallibrary;
 
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class LibrarianLoader {
     public void loadLibrarian(String filePath, Library library) {
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            boolean firstLine = true;
-            while ((line = buffer.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] parts;
+            reader.readNext();
+            while ((parts = reader.readNext()) != null) {
                 if (parts.length < 7) {
-                    System.out.println("Skipping invalid row: " + line);
+                    System.out.println("Skipping invalid row: ");
                     continue;
                 }
                 String name = parts[0].trim();
@@ -35,7 +31,7 @@ public class LibrarianLoader {
                     // System.out.println("Invalid number in row: " + line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
     }

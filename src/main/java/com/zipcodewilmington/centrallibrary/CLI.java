@@ -1,6 +1,7 @@
 package com.zipcodewilmington.centrallibrary;
 
 import java.text.NumberFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -19,7 +20,7 @@ public class CLI{
 
     public void LMS() {
         boolean isRunning = true;
-
+        printRandomItems();
         do {
             printMainMenu();
             int option = getPositiveInt("Please enter your choice:");
@@ -679,4 +680,16 @@ public class CLI{
         System.out.println("Reservation cancelled.");
     }
 
+    public void printRandomItems() {
+        List<LibraryItem> items = library.getItems();
+        if (items.isEmpty()) {
+            System.out.println("No items available.");
+            return;
+        }
+        Collections.shuffle(items);
+        int limit = Math.min(5, items.size());
+        for (int i = 0; i < limit; i++) {
+            System.out.println(items.get(i));
+        }
+    }
 }

@@ -1,22 +1,18 @@
 package com.zipcodewilmington.centrallibrary;
 
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class LibraryMemberLoader {
     public void loadLibraryMember(String filePath, Library library) {
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            boolean firstLine = true;
-            while ((line = buffer.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] parts;
+            reader.readNext();
+            while ((parts = reader.readNext()) != null) {
                 if (parts.length < 7) {
-                    System.out.println("Skipping invalid row: " + line);
+                    System.out.println("Skipping invalid row: ");
                     continue;
                 }
                 String name = parts[0].trim();
@@ -26,8 +22,7 @@ public class LibraryMemberLoader {
                 String memberId = parts[4].trim();
                 String membershipDate = parts[5].trim();
                 String addressStr = parts[6].trim();
-                String cleanAddress = addressStr.replaceAll("^\"|\"$", ""); 
-                String[] addressParts = cleanAddress.split(",");
+                String[] addressParts = addressStr.split("'");
                 String street = addressParts[0].trim();
                 String city = addressParts[1].trim();
                 String state = addressParts[2].trim();
@@ -41,7 +36,7 @@ public class LibraryMemberLoader {
                     // System.out.println("Invalid number in row: " + line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
     }

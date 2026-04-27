@@ -1,23 +1,18 @@
 package com.zipcodewilmington.centrallibrary;
 
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class MusicLoader {
     public void loadMusic(String filePath, Library library) {
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            boolean firstLine = true;
-            while((line = buffer.readLine()) != null) {
-                if(firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-                String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
-                if(parts.length < 8) {
-                    System.out.println("Invalid Data: " + line);
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] parts;
+            reader.readNext();
+            while ((parts = reader.readNext()) != null) {
+                if (parts.length < 7) {
+                    System.out.println("Skipping invalid row: ");
                     continue;
                 }
                 String id = parts[0].trim();
@@ -36,7 +31,7 @@ public class MusicLoader {
                     // System.out.println("Invalid number in row: " + line);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
     }
