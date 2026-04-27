@@ -22,7 +22,11 @@ public class LibraryMemberLoader {
                 String memberId = parts[4].trim();
                 String membershipDate = parts[5].trim();
                 String addressStr = parts[6].trim();
-                String[] addressParts = addressStr.split("'");
+                String[] addressParts = addressStr.split(",", 4);
+                if (addressParts.length < 4) {
+                    System.out.println("Invalid address format: " + addressStr);
+                    continue;
+                }
                 String street = addressParts[0].trim();
                 String city = addressParts[1].trim();
                 String state = addressParts[2].trim();
