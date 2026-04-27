@@ -602,11 +602,12 @@ public class CLI{
             System.out.println("Member not found.");
             return;
         }
-        System.out.println("Outstanding fees: $" + member.getOutstandingFees());
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
+        System.out.println("Outstanding fees: " + formatter.format(member.getOutstandingFees()));
         double amount = getPositiveDouble("Enter payment amount: ");
         member.payFees(amount);
         System.out.println("Payment successful.");
-        System.out.println("Remaining balance: $" + member.getOutstandingFees());
+        System.out.println("Remaining balance: $" + formatter.format(member.getOutstandingFees()));
     }
 
     public void handleLateFeeReport() {
