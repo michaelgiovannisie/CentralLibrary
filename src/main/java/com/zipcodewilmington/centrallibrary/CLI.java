@@ -607,7 +607,7 @@ public class CLI{
         double amount = getPositiveDouble("Enter payment amount: ");
         member.payFees(amount);
         System.out.println("Payment successful.");
-        System.out.println("Remaining balance: $" + formatter.format(member.getOutstandingFees()));
+        System.out.println("Remaining balance: " + formatter.format(member.getOutstandingFees()));
     }
 
     public void handleLateFeeReport() {
