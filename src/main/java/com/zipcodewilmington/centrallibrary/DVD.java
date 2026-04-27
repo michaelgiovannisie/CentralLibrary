@@ -19,7 +19,7 @@ public class DVD extends LibraryItem implements Reservable {
 
     @Override
     public String toString() {
-    return "ID: " + getId() + " | Title: " + getTitle() +
+    return getItemType() + " | ID: " + getId() + " | Title: " + getTitle() +
            " | Location: " + getLocation() +
            " | Director: " + director +
            " | Duration: " + duration + 

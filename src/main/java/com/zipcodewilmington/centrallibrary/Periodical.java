@@ -22,7 +22,7 @@ public class Periodical extends LibraryItem {
 
     @Override
     public String toString() {
-    return "ID: " + getId() + " | Title: " + getTitle() +
+    return getItemType() + " | ID: " + getId() + " | Title: " + getTitle() +
            " | Location: " + getLocation() +
            " | Publisher: " + publisher +
            " | ISSN: " + issn +

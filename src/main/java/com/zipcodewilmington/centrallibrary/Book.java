@@ -17,7 +17,7 @@ public class Book extends LibraryItem {
     
     @Override
     public String toString() {
-    return "ID: " + getId() + " | Title: " + getTitle() + 
+    return getItemType() + " | ID: " + getId() + " | Title: " + getTitle() + 
     " | Location: " + getLocation() + " | Author: " + author + 
     " | ISBN: " + isbn + " | Pages: " + pages + " | Genre: " + genre + 
     " | " + (isAvailable() ? "Available" : "Unavailable");

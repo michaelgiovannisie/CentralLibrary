@@ -18,7 +18,7 @@ public class Music extends LibraryItem {
     }
     @Override
     public String toString() {
-        return "ID: " + getId() + " | Title: " + getTitle() + 
+        return getItemType() + " | ID: " + getId() + " | Title: " + getTitle() + 
         " | Location" + getLocation() + " | " + artist + " | Date: " + date +
         " | " + genre + " | " + length + " sec";
     }
