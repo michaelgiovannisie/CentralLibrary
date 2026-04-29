@@ -5,6 +5,7 @@ public class Book extends LibraryItem {
     private String isbn;
     private int pages;
     private String genre;
+    private boolean isReserved;
 
     public Book(String id, String title, String location,
             String author, String isbn, int pages, String genre) {
@@ -94,5 +95,10 @@ public class Book extends LibraryItem {
     @Override
     public String getItemType() {
         return "Book";
+    }
+
+    @Override
+    public boolean isReserved() {
+        return isReserved;
     }
 }

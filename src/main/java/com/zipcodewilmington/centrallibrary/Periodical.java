@@ -7,7 +7,8 @@ public class Periodical extends LibraryItem {
     private String issn; 
     private int volume;                  
     private int issueNumber; 
-    private String publicationDate; 
+    private String publicationDate;
+    private boolean isReserved; 
 
 
     public Periodical(String id, String title, String location, String publisher, 
@@ -110,5 +111,10 @@ public class Periodical extends LibraryItem {
         publisher,
         issn,
         };
+    }
+
+    @Override
+    public boolean isReserved() {
+        return isReserved;
     }
 }

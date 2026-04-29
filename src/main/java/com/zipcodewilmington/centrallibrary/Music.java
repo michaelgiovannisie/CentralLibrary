@@ -6,6 +6,7 @@ public class Music extends LibraryItem {
     private String genre;
     private String lyrics;
     private int length;
+    private boolean isReserved;
 
     public Music(String id, String title, String location, String artist, 
             String date, String genre, String lyrics, int length) {
@@ -88,5 +89,10 @@ public class Music extends LibraryItem {
     @Override
     public String getItemType() {
         return "Music";
+    }
+
+    @Override
+    public boolean isReserved() {
+        return isReserved;
     }
 }
