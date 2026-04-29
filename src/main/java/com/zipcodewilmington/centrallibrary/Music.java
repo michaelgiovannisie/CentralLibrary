@@ -10,11 +10,11 @@ public class Music extends LibraryItem {
     public Music(String id, String title, String location, String artist, 
             String date, String genre, String lyrics, int length) {
         super(id, title, location); 
-        setArtist(artist);
-        setDate(date);
-        setGenre(genre);
-        setLyrics(lyrics);
-        setLength(length);
+        this.artist = artist;
+        this.date = date;
+        this.genre = genre;
+        this.lyrics = lyrics;
+        this.length = length;
     }
     @Override
     public String toString() {

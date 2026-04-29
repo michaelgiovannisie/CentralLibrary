@@ -12,9 +12,9 @@ public class Librarian extends Person {
     public Librarian(String name, int age, String email, String phoneNumber,
                  String employeeId, String department, double salary) {
         super(name, age, email, phoneNumber);
-        setEmployeeId(employeeId);
-        setDepartment(department);
-        setSalary(salary);
+        this.employeeId = employeeId;
+        this.department = department;
+        this.salary = salary;
     }
 
     @Override
